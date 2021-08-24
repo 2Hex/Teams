@@ -29,9 +29,6 @@ public class TeamChat implements CommandExecutor {
                         if (plugin.getConfig().getStringList("Teams." + childSection).contains(sender.getName()))
                             for(String playerName : plugin.getConfig().getStringList("Teams." + childSection)){
                                 Player player = Bukkit.getPlayer(playerName);
-                                if(player == sender){
-                                    continue;
-                                }
                                 player.sendMessage(ChatColor.YELLOW + "(" + message + ") " + ChatColor.GOLD + "From " + sender.getName());
                             }
                     }

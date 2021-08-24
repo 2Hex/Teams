@@ -33,13 +33,12 @@ public class AssignTeam implements CommandExecutor {
             }
             if (plugin.getConfig().isConfigurationSection("Teams." + teamLeader.getName())) {
                 plugin.getConfig().getStringList("Teams." + teamLeader.getName()).add(assigned.getName());
-                sender.sendMessage(ChatColor.GREEN + "DONE");
             } else {
                 List<String> list = new ArrayList<>();
                 list.add(assigned.getName());
                 plugin.getConfig().set(("Teams." + teamLeader.getName()), list);
-                sender.sendMessage(ChatColor.GREEN + "DONE");
             }
+            sender.sendMessage(ChatColor.GREEN + "DONE");
 
         }
         return true;
