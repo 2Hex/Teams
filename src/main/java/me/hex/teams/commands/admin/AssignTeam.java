@@ -1,17 +1,17 @@
 package me.hex.teams.commands.admin;
 
 import me.hex.teams.Teams;
+import me.hex.teams.commands.BaseCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class AssignTeam implements CommandExecutor {
+public class AssignTeam extends BaseCommand {
     private final Teams plugin;
 
     public AssignTeam(Teams plugin) {
@@ -24,24 +24,26 @@ public class AssignTeam implements CommandExecutor {
         if (!sender.hasPermission("team.assign")) return true;
         if (args.length != 3) return true;
         if (!args[0].equalsIgnoreCase("assign")) return true;
-        if (plugin.getConfig().getBoolean("enable") && !plugin.getConfig().getBoolean("lock")) {
-            if (Bukkit.getPlayer(args[1]) == null || Bukkit.getPlayer(args[2]) == null) return true;
-            Player assigned = Bukkit.getPlayer(args[1]);
-            Player teamLeader = Bukkit.getPlayer(args[2]);
-            for (String childSection : plugin.getConfig().getKeys(true)) {
-                plugin.getConfig().getStringList("Teams." + childSection).remove(assigned.getName());
-            }
-            if (plugin.getConfig().isConfigurationSection("Teams." + teamLeader.getName())) {
-                plugin.getConfig().getStringList("Teams." + teamLeader.getName()).add(assigned.getName());
-            } else {
-                List<String> list = new ArrayList<>();
-                list.add(assigned.getName());
-                plugin.getConfig().set(("Teams." + teamLeader.getName()), list);
-            }
-            sender.sendMessage(ChatColor.GREEN + "DONE");
+        if (Bukkit.getPlayer(args[1]) == null || Bukkit.getPlayer(args[2]) == null) return true;
+        Player assigned = Bukkit.getPlayer(args[1]);
+        Player teamLeader = Bukkit.getPlayer(args[2]);
+        Player player = (Player) sender;
+        if (!plugin.getConfig().getBoolean("enable") || plugin.getConfig().getBoolean("lock")) {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eTeams have been &cDISABLED / LOCKED"));
+            return true;
+        }
+        for (UUID key : leaders.keySet()) {
+            leaders.get(key).remove(assigned.getUniqueId());
+            if(key == assigned.getUniqueId())
+                leaders.remove(key);
+        }
 
+        if (leaders.containsKey(teamLeader.getUniqueId())) {
+            leaders.get(player.getUniqueId()).add(assigned.getUniqueId());
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eDone!"));
+        } else {
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &c" + teamLeader.getName() + " is not a  team leader"));
         }
         return true;
     }
 }
-

@@ -1,15 +1,16 @@
 package me.hex.teams.commands.allplayers;
 
 import me.hex.teams.Teams;
+import me.hex.teams.commands.BaseCommand;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
-public class Create implements CommandExecutor {
+public class Create extends BaseCommand {
     private final Teams plugin;
 
     public Create(Teams plugin) {
@@ -19,16 +20,21 @@ public class Create implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if(sender instanceof Player){
-            if (!sender.hasPermission("team.create")) return true;
             if (args.length != 1) return true;
             if(!args[0].equalsIgnoreCase("create")) return true;
             Player player = (Player) sender;
-            for (String childSection : plugin.getConfig().getKeys(true)) {
-                plugin.getConfig().getStringList("Teams." + childSection).remove(player.getName());
+            if(!plugin.getConfig().getBoolean("enable") || plugin.getConfig().getBoolean("lock")){
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eTeams have been &cDISABLED / LOCKED"));
+                return true;
             }
-            List<String> list = new ArrayList<>();
-            list.add(player.getName());
-            plugin.getConfig().set("Teams." + player.getName(), list);
+            if (!leaders.containsKey(player.getUniqueId())) {
+                ArrayList<UUID> list = new ArrayList<>();
+                list.add(player.getUniqueId());
+                leaders.put(player.getUniqueId(), list);
+                sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eCreated team"));
+                return true;
+            }
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eCannot Make Team, Leave your current one first."));
         }
         return true;
     }

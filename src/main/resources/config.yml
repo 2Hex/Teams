@@ -1,3 +1,4 @@
 size: 3
 enable: false
-Teams:
+lock: false
+teammates-can-hit-each-other: true

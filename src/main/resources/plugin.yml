@@ -3,6 +3,7 @@ version: ${project.version}
 main: me.hex.teams.Teams
 authors: [ 2Hex ]
 description: Teams
+softdepend: [PlaceholderAPI]
 commands:
   team:
     description: Team Related Commands.
