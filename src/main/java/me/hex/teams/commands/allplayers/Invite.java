@@ -85,11 +85,16 @@ public class Invite extends BaseCommand {
                     return true;
                 }
 
-                chat.requestChatInput(target.getUniqueId(), 600, input -> {
+                chat.requestChatInput(target.getUniqueId(), 1200, input -> {
                     if (input.equalsIgnoreCase("accept")) {
 
                         if (leaders.containsKey(player.getUniqueId())) {
                             members.add(target.getUniqueId());
+                            if(members.size() > plugin.getConfig().getInt("size")){
+                                members.remove(target.getUniqueId());
+                                player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &cYour team is full!"));
+                                return;
+                            }
                         } else {
                             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &cYou're not the team leader"));
                         }

@@ -32,17 +32,31 @@ public class AssignTeam extends BaseCommand {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eTeams have been &cDISABLED / LOCKED"));
             return true;
         }
+        boolean alrinTeam = false;
         for (UUID key : leaders.keySet()) {
+            List<UUID> list = BaseCommand.leaders.get(key);
+            if (key == teamLeader.getUniqueId() && list.contains(assigned.getUniqueId()))
+            alrinTeam = true;
+            if (assigned.getUniqueId() == key && list.contains(teamLeader.getUniqueId()))
+                alrinTeam = true;
+
+        }
+        if(alrinTeam){
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &cPlayer already in " + teamLeader.getName() + "'s team!"));
+        return true;
+        }
+        if (leaders.containsKey(teamLeader.getUniqueId())) {
+            for (UUID key : leaders.keySet()) {
             leaders.get(key).remove(assigned.getUniqueId());
             if(key == assigned.getUniqueId())
                 leaders.remove(key);
         }
 
-        if (leaders.containsKey(teamLeader.getUniqueId())) {
             leaders.get(player.getUniqueId()).add(assigned.getUniqueId());
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eDone!"));
+            assigned.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6&lHype&e&lEvents&8>> &eYou have been assigned to &6" + teamLeader.getName() + "'s &eTeam!"));
         } else {
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &c" + teamLeader.getName() + " is not a  team leader"));
+            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &c" + teamLeader.getName() + " is not a team leader"));
         }
         return true;
     }

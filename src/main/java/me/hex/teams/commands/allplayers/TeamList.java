@@ -52,8 +52,16 @@ public class TeamList extends BaseCommand {
             return true;
             }
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eTeamed Players: " + playersList));
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eLeader is: " + Bukkit.getPlayer(leaderID).getName()));
 
+            if(!leaders.containsKey(Bukkit.getPlayer(leaderID).getUniqueId())){
+                for(UUID k : leaders.get(Bukkit.getPlayer(leaderID).getUniqueId())){
+                    if(leaders.containsKey(k))
+                        leaderID = k;
+                }
+            }
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eLeader is: " + Bukkit.getPlayer(leaderID).getName()));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eTeamed Players Amount: " + playersList.size()));
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eTeamed Players Max Amount: " + plugin.getConfig().getInt("size")));
         }
         return true;
     }

@@ -82,6 +82,7 @@ public class ChatEvent implements Listener {
                     playerByID.sendMessage(ChatColor.RED + "Team Member " + ChatColor.YELLOW + event.getPlayer().getName() + ChatColor.DARK_RED + " Disconnected.");
                 } else {
                     playerByID.sendMessage(ChatColor.RED + "Team Leader " + ChatColor.YELLOW + event.getPlayer().getName() + ChatColor.DARK_RED + " Disconnected.");
+                    BaseCommand.leaders.remove(id);
                 }
             }
         }

@@ -5,6 +5,7 @@ import me.hex.teams.commands.OnHit;
 import me.hex.teams.commands.TeamNumberExpansion;
 import me.hex.teams.commands.admin.*;
 import me.hex.teams.commands.allplayers.*;
+import me.hex.teams.commands.getTeamIndex;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,10 +23,11 @@ public class Teams extends JavaPlugin{
     public void onEnable() {
         saveDefaultConfig();
         ChatEvent chat = new ChatEvent(this);
+        getTeamIndex utils = new getTeamIndex();
         getServer().getPluginManager().registerEvents(chat, this);
         getServer().getPluginManager().registerEvents(new OnHit(this), this);
         getCommand("team").setExecutor(this);
-        commands.put("create", new Create(this));
+        commands.put("create", new Create(this, utils));
         commands.put("invite", new Invite(this, chat));
         commands.put("kick", new KickTeamMember(this));
         commands.put("leave", new Leave(this));
@@ -41,7 +43,7 @@ public class Teams extends JavaPlugin{
         commands.put("help", new Help());
         commands.put("disband", new DisbandTeam(this));
         if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            new TeamNumberExpansion(this).register();
+            new TeamNumberExpansion(this, utils).register();
         }
     }
 
