@@ -2,8 +2,6 @@ package me.hex.teams.commands.allplayers;
 
 import me.hex.teams.Teams;
 import me.hex.teams.commands.BaseCommand;
-import me.hex.teams.commands.TeamNumberExpansion;
-import me.hex.teams.commands.getTeamIndex;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,11 +13,9 @@ import java.util.UUID;
 
 public class Create extends BaseCommand {
     private final Teams plugin;
-    private final getTeamIndex utils;
 
-    public Create(Teams plugin, getTeamIndex utils) {
+    public Create(Teams plugin) {
         this.plugin = plugin;
-        this.utils = utils;
     }
 
     @Override
@@ -32,11 +28,11 @@ public class Create extends BaseCommand {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eTeams have been &cDISABLED / LOCKED"));
                 return true;
             }
-            if (!leaders.containsKey(player.getUniqueId())) {
+            if(!isLeader(player.getUniqueId()) && !isMember(player.getUniqueId())){
                 ArrayList<UUID> list = new ArrayList<>();
                 list.add(player.getUniqueId());
                 leaders.put(player.getUniqueId(), list);
-                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &6" + sender.getName() + " &ehas created a team! Team number: &6" + utils.getTeamIndex(player.getUniqueId())));
+                Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &6" + sender.getName() + " &ehas created a team! Team number: &6" + getTeamIndex(player.getUniqueId())));
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eCreated team"));
                 return true;
             }

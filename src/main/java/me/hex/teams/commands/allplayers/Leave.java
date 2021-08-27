@@ -31,20 +31,20 @@ public class Leave extends BaseCommand {
             }
             boolean isLeader = false;
             boolean inTeam = false;
-            if(leaders.containsKey(player.getUniqueId()))
+            if(isLeader(player.getUniqueId()))
                 isLeader = true;
             if(isLeader) {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &cCan't leave, use /team disband instead."));
                 return true;
             }
             for (UUID key : leaders.keySet()) {
-                List<UUID> list = BaseCommand.leaders.get(key);
+                List<UUID> list = getTeam(key);
                 if (!list.contains(player.getUniqueId())) continue;
                 for (UUID id : list) {
                     Player playerByID = Bukkit.getPlayer(id);
                     playerByID.sendMessage(ChatColor.translateAlternateColorCodes('&',  "&6" + player.getName() + " &eHas Left the team!"));
                 }
-                    leaders.get(key).remove(player.getUniqueId());
+                    getTeam(key).remove(player.getUniqueId());
                     inTeam = true;
             }
             if (inTeam) {

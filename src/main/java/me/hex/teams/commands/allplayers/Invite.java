@@ -2,7 +2,7 @@ package me.hex.teams.commands.allplayers;
 
 import me.hex.teams.Teams;
 import me.hex.teams.commands.BaseCommand;
-import me.hex.teams.commands.ChatEvent;
+import me.hex.teams.listeners.ChatEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -40,17 +40,17 @@ public class Invite extends BaseCommand {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &cYou cannot invite your self. (Duh)"));
                 return true;
             }
-            List<UUID> members = leaders.get(player.getUniqueId());
+            List<UUID> members = getTeam(player.getUniqueId());
             if(plugin.getConfig().getInt("size") == members.size()){
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &cYour team is full!"));
                 return true;
             }
             boolean senderInTeam = false;
             for (UUID key : leaders.keySet()) {
-                if (leaders.get(key).contains(player.getUniqueId())) {
+                if (getTeam(key).contains(player.getUniqueId())) {
                     senderInTeam = true;
                 }
-                if (senderInTeam && !leaders.containsKey(player.getUniqueId())) {
+                if (senderInTeam && !isLeader(player.getUniqueId())) {
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &cYou're not the team leader."));
                     return true;
                 }
@@ -61,7 +61,7 @@ public class Invite extends BaseCommand {
             }
             boolean inTeam = false;
             for (UUID key : leaders.keySet()) {
-                if (leaders.get(key).contains(target.getUniqueId()))
+                if (getTeam(key).contains(target.getUniqueId()))
                     inTeam = true;
             }
             if(inTeam){
@@ -70,9 +70,9 @@ public class Invite extends BaseCommand {
             }
             if(!chat.waitingInputMap.containsKey(target.getUniqueId())) {
                 target.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eYou have been invited to a Team By " + sender.getName() + " Answer with 'Accept' Or 'deny' "));
-                if (leaders.containsKey(player.getUniqueId())) {
+                if (isLeader(player.getUniqueId())) {
                     for (UUID key : leaders.keySet()) {
-                        List<UUID> list = BaseCommand.leaders.get(key);
+                        List<UUID> list = getTeam(key);
                         if (!key.equals(player.getUniqueId())) continue;
                         for (UUID id : list) {
                             Player playerByID = Bukkit.getPlayer(id);
@@ -88,7 +88,7 @@ public class Invite extends BaseCommand {
                 chat.requestChatInput(target.getUniqueId(), 1200, input -> {
                     if (input.equalsIgnoreCase("accept")) {
 
-                        if (leaders.containsKey(player.getUniqueId())) {
+                        if (isLeader(player.getUniqueId())) {
                             members.add(target.getUniqueId());
                             if(members.size() > plugin.getConfig().getInt("size")){
                                 members.remove(target.getUniqueId());
@@ -100,9 +100,9 @@ public class Invite extends BaseCommand {
                         }
 
                         target.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eAccepted " + sender.getName()));
-                        if (leaders.containsKey(player.getUniqueId())) {
+                        if (isLeader(player.getUniqueId())) {
                             for (UUID key : leaders.keySet()) {
-                                List<UUID> list = BaseCommand.leaders.get(key);
+                                List<UUID> list = getTeam(key);
                                 if (!key.equals(player.getUniqueId())) continue;
                                 for (UUID id : list) {
                                     Player playerByID = Bukkit.getPlayer(id);

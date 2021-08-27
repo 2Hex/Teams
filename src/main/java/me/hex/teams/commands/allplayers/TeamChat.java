@@ -27,7 +27,7 @@ public class TeamChat extends BaseCommand {
         Player player = (Player) sender;
         boolean inTeam = false;
         for (UUID key : leaders.keySet()) {
-            if (leaders.get(key).contains(player.getUniqueId()))
+            if (getTeam(key).contains(player.getUniqueId()))
                 inTeam = true;
         }
         if(!inTeam){

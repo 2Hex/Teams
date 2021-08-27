@@ -33,11 +33,11 @@ public class TeamList extends BaseCommand {
             ArrayList<String> playersList = new ArrayList<>();
             UUID leaderID = UUID.randomUUID();
             for (UUID key : leaders.keySet()) {
-                List<UUID> party = leaders.get(key);
+                List<UUID> party = getTeam(key);
                 if (party.contains(player.getUniqueId())) {
                     for (UUID id : party) {
                         playersList.add(Bukkit.getPlayer(id).getName());
-                        if (leaders.containsKey(id)) {
+                        if (isLeader(id)) {
                             leaderID = id;
                         }
                     }
@@ -53,9 +53,9 @@ public class TeamList extends BaseCommand {
             }
             sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eTeamed Players: " + playersList));
 
-            if(!leaders.containsKey(Bukkit.getPlayer(leaderID).getUniqueId())){
-                for(UUID k : leaders.get(Bukkit.getPlayer(leaderID).getUniqueId())){
-                    if(leaders.containsKey(k))
+            if(!isLeader(Bukkit.getPlayer(leaderID).getUniqueId())){
+                for(UUID k : getTeam((Bukkit.getPlayer(leaderID).getUniqueId()))){
+                    if(isLeader(k))
                         leaderID = k;
                 }
             }

@@ -30,9 +30,9 @@ public class DisbandTeam extends BaseCommand {
                 return true;
             }
 
-            if (leaders.containsKey(player.getUniqueId())) {
+            if (isLeader(player.getUniqueId())) {
                 for (UUID key : leaders.keySet()) {
-                    List<UUID> list = BaseCommand.leaders.get(key);
+                    List<UUID> list = getTeam(key);
                     if (!key.equals(player.getUniqueId())) continue;
                     for (UUID id : list) {
                         Player playerByID = Bukkit.getPlayer(id);

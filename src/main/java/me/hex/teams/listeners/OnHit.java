@@ -1,6 +1,7 @@
-package me.hex.teams.commands;
+package me.hex.teams.listeners;
 
 import me.hex.teams.Teams;
+import me.hex.teams.commands.BaseCommand;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -32,9 +33,9 @@ private final Teams plugin;
         looping through teams to  check if they're in a team together
         and setting the boolean value to true if found
          */
-        for (UUID key : BaseCommand.leaders.keySet()) {
-            if (BaseCommand.leaders.get(key).contains(attacked.getUniqueId()) &&
-                    BaseCommand.leaders.get(key).contains(attacker.getUniqueId()))
+        for (UUID key : BaseCommand.getLeaders().keySet()) {
+            if (BaseCommand.getTeam(key).contains(attacked.getUniqueId()) &&
+                    BaseCommand.getTeam(key).contains(attacker.getUniqueId()))
                 inTeam = true;
         }
         //Checking if the for loop found the info we wanted

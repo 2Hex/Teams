@@ -28,33 +28,33 @@ public class AssignTeam extends BaseCommand {
         Player assigned = Bukkit.getPlayer(args[1]);
         Player teamLeader = Bukkit.getPlayer(args[2]);
         Player player = (Player) sender;
+        boolean alrTeamed = false;
         if (!plugin.getConfig().getBoolean("enable") || plugin.getConfig().getBoolean("lock")) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eTeams have been &cDISABLED / LOCKED"));
             return true;
         }
-        boolean alrinTeam = false;
+
         for (UUID key : leaders.keySet()) {
-            List<UUID> list = BaseCommand.leaders.get(key);
-            if (key == teamLeader.getUniqueId() && list.contains(assigned.getUniqueId()))
-            alrinTeam = true;
-            if (assigned.getUniqueId() == key && list.contains(teamLeader.getUniqueId()))
-                alrinTeam = true;
+            List<UUID> teamList = BaseCommand.leaders.get(key);
+            if (key == teamLeader.getUniqueId() && teamList.contains(assigned.getUniqueId()))
+                alrTeamed = true;
+            if (assigned.getUniqueId() == key && teamList.contains(teamLeader.getUniqueId()))
+                alrTeamed = true;
 
         }
-        if(alrinTeam){
+        if (alrTeamed) {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &cPlayer already in " + teamLeader.getName() + "'s team!"));
-        return true;
+            return true;
         }
         if (leaders.containsKey(teamLeader.getUniqueId())) {
-            for (UUID key : leaders.keySet()) {
-            leaders.get(key).remove(assigned.getUniqueId());
-            if(key == assigned.getUniqueId())
-                leaders.remove(key);
-        }
-
+            for (UUID leaderKey : leaders.keySet()) {
+                leaders.get(leaderKey).remove(assigned.getUniqueId());
+                if (leaderKey == assigned.getUniqueId())
+                    leaders.remove(leaderKey);
+            }
             leaders.get(player.getUniqueId()).add(assigned.getUniqueId());
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eDone!"));
-            assigned.sendMessage(ChatColor.translateAlternateColorCodes('&',"&6&lHype&e&lEvents&8>> &eYou have been assigned to &6" + teamLeader.getName() + "'s &eTeam!"));
+            assigned.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &eYou have been assigned to &6" + teamLeader.getName() + "'s &eTeam!"));
         } else {
             player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &c" + teamLeader.getName() + " is not a team leader"));
         }

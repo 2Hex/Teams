@@ -38,9 +38,9 @@ public class KickTeamMember extends BaseCommand {
                 sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &cYou cannot kick your self. (Duh)"));
                 return true;
             }
-            if (leaders.containsKey(player.getUniqueId())) {
+            if (isLeader(player.getUniqueId())) {
                 for (UUID key : leaders.keySet()) {
-                    List<UUID> list = BaseCommand.leaders.get(key);
+                    List<UUID> list = getTeam(key);
                     if (!key.equals(player.getUniqueId())) continue;
                     for (UUID id : list) {
                         Player playerByID = Bukkit.getPlayer(id);
@@ -48,7 +48,7 @@ public class KickTeamMember extends BaseCommand {
                     }
                 }
 
-                List<UUID> members = leaders.get(player.getUniqueId());
+                List<UUID> members = getTeam(player.getUniqueId());
                 if (!members.contains(target.getUniqueId())) {
                     sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6&lHype&e&lEvents&8>> &cYou cannot kick non-teammates. (Duh)"));
                     return true;
