@@ -1,0 +1,24 @@
+name: Maven
+on: push
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-:
+      - name: Build Teams with Maven
+        run: mvn clean install --file "Teams/pom.xml"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Teams
+          path: "Teams/target/*.jar"
